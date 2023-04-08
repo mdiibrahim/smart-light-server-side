@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const { SerialPort } = require('serialport');
 require('dotenv').config();
@@ -51,9 +50,16 @@ app.get('/led/history', async (req, res) => {
     const ledStates = await collection.find({}).toArray();
     res.send(ledStates);
 });
-app.delete('/history/delete', async (req, res) => {
-  
+app.delete('/led/history/delete', async (req, res) => {
+    
     const result = await collection.deleteMany({});
+    res.send(result);
+
+})
+app.delete('/led/history/delete/:id', async (req, res) => {
+    const id = req.params.id;
+    const filter = {_id: new ObjectId(id)}
+    const result = await collection.deleteOne(filter);
     res.send(result);
 
 })
